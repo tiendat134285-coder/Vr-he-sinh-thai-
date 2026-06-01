@@ -8,7 +8,7 @@
   <body>
     <a-scene>
       <a-assets>
-        <video id="video360" src="1.mp4" loop="true" crossorigin="anonymous" playsinline></video>
+        <video id="video360" src="1.mp4.mp4" loop="true" autoplay="true" muted crossorigin="anonymous" playsinline></video>
       </a-assets>
       
       <a-videosphere src="#video360" rotation="0 -90 0"></a-videosphere>
@@ -17,12 +17,17 @@
     </a-scene>
 
     <script>
-      document.querySelector('a-scene').addEventListener('click', function () {
+      // Trình duyệt hiện tại chặn tự động phát video có tiếng (Autoplay Policy)
+      // Đoạn script này giúp kích hoạt chạy video ngay khi người dùng chạm/click vào màn hình
+      document.body.addEventListener('click', function () {
         const video = document.querySelector('#video360');
         if (video.paused) {
-          video.play();
+          video.muted = false; // Bật lại âm thanh nếu muốn khi bắt đầu phát
+          video.play().catch(function(error) {
+            console.log("Kích hoạt video thất bại:", error);
+          });
         }
-      });
+      }, { once: true }); // "once: true" đảm bảo sự kiện này chỉ chạy một lần duy nhất ở lần click đầu tiên
     </script>
   </body>
 </html>
