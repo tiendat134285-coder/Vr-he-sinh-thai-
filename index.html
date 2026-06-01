@@ -4,30 +4,52 @@
     <meta charset="utf-8">
     <title>Trình xem Video 360 Độ</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <style>
+      /* Giao diện cho nút Play đè lên màn hình */
+      #playButton {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        padding: 15px 30px;
+        background: #ff4757;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 18px;
+        cursor: pointer;
+        font-family: sans-serif;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      }
+    </style>
   </head>
   <body>
+
+    <button id="playButton">Bấm vào đây để xem Video 360</button>
+
     <a-scene>
       <a-assets>
-        <video id="video360" src="1.mp4.mp4" loop="true" autoplay="true" muted crossorigin="anonymous" playsinline></video>
+        <video id="video360" src="1.mp4.mp4" loop="true" crossorigin="anonymous" playsinline webkit-playsinline></video>
       </a-assets>
       
       <a-videosphere src="#video360" rotation="0 -90 0"></a-videosphere>
-      
       <a-camera position="0 0 0"></a-camera>
     </a-scene>
 
     <script>
-      // Trình duyệt hiện tại chặn tự động phát video có tiếng (Autoplay Policy)
-      // Đoạn script này giúp kích hoạt chạy video ngay khi người dùng chạm/click vào màn hình
-      document.body.addEventListener('click', function () {
-        const video = document.querySelector('#video360');
-        if (video.paused) {
-          video.muted = false; // Bật lại âm thanh nếu muốn khi bắt đầu phát
-          video.play().catch(function(error) {
-            console.log("Kích hoạt video thất bại:", error);
-          });
-        }
-      }, { once: true }); // "once: true" đảm bảo sự kiện này chỉ chạy một lần duy nhất ở lần click đầu tiên
+      const btn = document.getElementById('playButton');
+      const video = document.querySelector('#video360');
+
+      btn.addEventListener('click', function () {
+        // Phát video
+        video.play().then(() => {
+          // Nếu phát thành công thì ẩn nút bấm đi
+          btn.style.display = 'none';
+        }).catch(err => {
+          alert("Không thể phát video: " + err.message);
+        });
+      });
     </script>
   </body>
 </html>
